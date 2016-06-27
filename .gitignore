@@ -1,0 +1,11 @@
+/*.log
+/target
+/*-init.clj
+/resources/public/js/compiled
+out
+.idea
+resources/public
+.lein-failures
+.lein-repl-history
+ers.iml
+pom.xml
