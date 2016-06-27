@@ -1,8 +1,15 @@
 (defproject ers "0.1.0-SNAPSHOT"
-  :dependencies [[org.clojure/clojure "1.8.0"]
+  :dependencies [[compojure "1.4.0"]
+                 [fogus/ring-edn "0.3.0"]
+                 [metosin/compojure-api "0.23.1"]
+                 [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.8.51"]
                  [reagent "0.5.1"]
                  [secretary "1.2.3"]]
+
+  :main ers.core
+
+  :aot [ers.core]
 
   :min-lein-version "2.5.3"
 
