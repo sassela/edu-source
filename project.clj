@@ -1,9 +1,13 @@
 (defproject ers "0.1.0-SNAPSHOT"
-  :dependencies [[compojure "1.4.0"]
+  :dependencies [[cljs-ajax "0.5.8"]
+                 [compojure "1.4.0"]
                  [fogus/ring-edn "0.3.0"]
                  [metosin/compojure-api "0.23.1"]
+                 [metosin/schema-tools "0.7.0"]
                  [org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.8.51"]
+                 [prismatic/schema "1.1.2"]
+                 [re-frame "0.7.0"]
                  [reagent "0.5.1"]
                  [secretary "1.2.3"]]
 

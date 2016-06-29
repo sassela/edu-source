@@ -1,12 +1,12 @@
 (ns ers.core
   (:require-macros [secretary.core :refer [defroute]])
   (:import goog.History)
-  (:require
-   [secretary.core :as secretary]
-   [goog.events :as events]
-   [goog.history.EventType :as EventType]
-   [reagent.core :as reagent]
-   ))
+  (:require [ers.handlers]
+            [goog.events :as events]
+            [goog.history.EventType :as EventType]
+            [re-frame.core :refer [dispatch subscribe]]
+            [reagent.core :as reagent]
+            [secretary.core :as secretary]))
 
 
 (defonce debug?
@@ -55,7 +55,9 @@
   (let [text (:text @ratom)]
     [:div [:h1 "Home Page"]
      [:p text "FIXME"]
-     [:a {:href "#/about"} "about page"]]))
+     [:button {:on-click #(dispatch [:items/get-all])} "ALL ITEMS"]
+     ;[:a {:href "#/about"} "about page"]
+     ]))
 
 (defn about [ratom]
   [:div [:h1 "About Page"]
