@@ -56,6 +56,7 @@
     [:div [:h1 "Home Page"]
      [:p text "FIXME"]
      [:button {:on-click #(dispatch [:items/get-all])} "ALL ITEMS"]
+     [:button {:on-click #(dispatch [:items/search "John"])} "SEARCH"]
      ;[:a {:href "#/about"} "about page"]
      ]))
 
