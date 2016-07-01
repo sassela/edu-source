@@ -55,7 +55,14 @@
   (fn [db [_id items]]
     (assoc db :input/search items)))
 
+
+(register-handler :page/set
+  (fn [db [_id items]]
+    (assoc db :page items)))
+
+
 (register-handler :init
   (fn [db [_]]
-    (assoc db :input/search ""
-              :items/list-items [])))
+    (assoc db :items/list-items []
+              :input/search ""
+              :page :home)))

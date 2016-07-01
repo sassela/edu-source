@@ -19,11 +19,6 @@
     (println "dev mode")))
 
 
-(defonce app-state
-  (reagent/atom {:text "Hello, what is your name? "
-                 :page :nil}))
-
-
 ;; Routes
 
 (defn hook-browser-navigation! []
@@ -38,10 +33,10 @@
   (secretary/set-config! :prefix "#")
 
   (defroute "/" []
-    (swap! app-state assoc :page :home))
+    (dispatch [:page/set :home]))
 
   (defroute "/about" []
-    (swap! app-state assoc :page :about))
+    (dispatch [:page/set :about]))
 
   ;; add routes here
 
@@ -64,17 +59,17 @@
                                 (dispatch [:items/search [@input]])))}
          "SEARCH"]]])))
 
-(defn home [ratom]
-  (let [text (:text @ratom)]
+(defn home []
+  (let []
     [:div [:h1 "Home Page"]
-     [:p text "FIXME"]
+     [:p "FIXME"]
      [:button {:on-click #(dispatch [:print-db])} "DB"]
      [:button {:on-click #(dispatch [:items/get-all])} "ALL ITEMS"]
      [search]
-     ;[:a {:href "#/about"} "about page"]
+     [:a {:href "#/about"} "about page"]
      ]))
 
-(defn about [ratom]
+(defn about []
   [:div [:h1 "About Page"]
    [:a {:href "#/"} "home page"]])
 
@@ -86,13 +81,13 @@
 (defmethod page :about [] about)
 (defmethod page :default [] (fn [_] [:div]))
 
-(defn current-page [ratom]
-  (let [page-key (:page @ratom)]
-    [(page page-key) ratom]))
+(defn current-page []
+  (let [page-key (subscribe [:page])]
+    [(page @page-key)]))
 
 
 (defn reload []
-  (reagent/render [current-page app-state]
+  (reagent/render [current-page]
                   (.getElementById js/document "app")))
 
 (defn ^:export main []
