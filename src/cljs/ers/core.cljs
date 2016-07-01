@@ -15,8 +15,7 @@
 (defn dev-setup []
   (when debug?
     (enable-console-print!)
-    (println "dev mode")
-    ))
+    (println "dev mode")))
 
 
 (defonce app-state
@@ -84,4 +83,5 @@
 (defn ^:export main []
   (dev-setup)
   (app-routes)
-  (reload))
+  (reload)
+  (dispatch [:init]))

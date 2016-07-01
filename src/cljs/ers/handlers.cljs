@@ -7,6 +7,12 @@
 
 (def jorum-route "http://api.jorum.ac.uk")
 
+(defn standard-request
+  [handler-name]
+  {:response-format :json
+   :keywords?       true
+   :error-handler   #(println (str "ERROR: " handler-name))})
+
 
 (register-handler :print-db
   (fn [db [_]]
@@ -21,14 +27,12 @@
 
 (register-handler
   :items/get-all
-  (fn [db]
+  (fn [db [_]]
     (GET
       (str jorum-route "/rest/items")
-      {:response-format :json
-       :keywords?       true
-       :handler         (fn [response]
-                          (dispatch [:items/update (:item response)]))
-       :error-handler   #(println "ERROR: :items/get-all")})
+      (assoc (standard-request :items/get-all)
+        :handler (fn [response]
+                   (dispatch [:items/update (:item response)]))))
     db))
 
 
@@ -44,3 +48,7 @@
                           (dispatch [:items/update (:item response)]))
        :error-handler   #(println "ERROR: :items/get-all")})
     db))
+(register-handler :init
+  (fn [db [_]]
+    (assoc db :input/search ""
+              :items/list-items [])))
