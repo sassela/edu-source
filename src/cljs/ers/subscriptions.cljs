@@ -4,3 +4,4 @@
             [re-frame.db]))
 
 (register-sub :items/list-items (fn [db _] (reaction (:items/list-items @db))))
+(register-sub :input/search (fn [db _] (reaction (:input/search @db))))

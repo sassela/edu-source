@@ -38,16 +38,23 @@
 
 (register-handler
   :items/search
-  (fn [db [_id keyword]]
+  (fn [db [_id keywords]]
     (GET
-      (str jorum-route "/rest/items/search?keyword=" keyword
+      (str jorum-route "/rest/items/search?keyword=" (first keywords)
+        #_(apply str (map #(str "&keyword=" %) (rest keyword)))
         #_(str "/rest/items/search?" #_(util/compose-query params)))
       {:response-format :json
        :keywords?       true
        :handler         (fn [response]
                           (dispatch [:items/update (:item response)]))
-       :error-handler   #(println "ERROR: :items/get-all")})
+       :error-handler   #(println "ERROR: :items/search")})
     db))
+
+
+(register-handler :input/update-search
+  (fn [db [_id items]]
+    (assoc db :input/search items)))
+
 (register-handler :init
   (fn [db [_]]
     (assoc db :input/search ""
