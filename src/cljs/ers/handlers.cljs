@@ -40,9 +40,7 @@
   :items/search
   (fn [db [_id keywords]]
     (GET
-      (str jorum-route "/rest/items/search?keyword=" (first keywords)
-        #_(apply str (map #(str "&keyword=" %) (rest keyword)))
-        #_(str "/rest/items/search?" #_(util/compose-query params)))
+      (str jorum-route "/rest/items/search?q=" keywords)
       {:response-format :json
        :keywords?       true
        :handler         (fn [response]

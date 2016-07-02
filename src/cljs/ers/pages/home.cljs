@@ -13,7 +13,7 @@
                  :value     @input
                  :placeholder "search"}]
         [:button {:on-click (util/event-handler
-                              (fn [e] (dispatch [:items/search [@input]])))}
+                              (fn [e] (dispatch [:items/search @input])))}
          "SEARCH"]]])))
 
 
