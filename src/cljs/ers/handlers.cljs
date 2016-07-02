@@ -1,11 +1,29 @@
 (ns ers.handlers
   (:require [ajax.core :refer [GET]]
-            [ers.util :as util]
-            [re-frame.core :refer [register-handler dispatch]]
+            [ers.schema :refer [db-schema]]
+            [re-frame.core :refer [after dispatch register-handler]]
             [schema.core :as s :include-macros true]))
 
 
 (def jorum-route "http://api.jorum.ac.uk")
+
+
+;; -- MIDDLEWARE --
+
+(defn check-and-throw
+  "throw an exception if db doesn't match the schema."
+  [a-schema db]
+  (if-let [problems  (s/check a-schema db)]
+    (throw (js/Error. (str "schema check failed: " problems)))))
+
+
+(def check-schema-mw (after (partial check-and-throw db-schema)))
+
+
+(def middleware [check-schema-mw])
+
+
+; -- EVENT HANDLERS --
 
 (defn standard-request
   [handler-name]
@@ -14,19 +32,23 @@
    :error-handler   #(println (str "ERROR: " handler-name))})
 
 
-(register-handler :print-db
+(register-handler
+  :print-db
   (fn [db [_]]
     (prn "DB: " db)
     db))
 
 
-(register-handler :items/update
+(register-handler
+  :items/update
+  middleware
   (fn [db [_id items]]
     (assoc db :items/list-items items)))
 
 
 (register-handler
   :items/get-all
+  middleware
   (fn [db [_]]
     (GET
       (str jorum-route "/rest/items")
@@ -38,28 +60,33 @@
 
 (register-handler
   :items/search
+  middleware
   (fn [db [_id keywords]]
     (GET
       (str jorum-route "/rest/items/search?q=" keywords)
-      {:response-format :json
-       :keywords?       true
-       :handler         (fn [response]
-                          (dispatch [:items/update (:item response)]))
-       :error-handler   #(println "ERROR: :items/search")})
+      (assoc (standard-request :items/search)
+        :handler (fn [response]
+                   (dispatch [:items/update (:item response)]))))
     db))
 
 
-(register-handler :input/update-search
+(register-handler
+  :input/update-search
+  middleware
   (fn [db [_id items]]
     (assoc db :input/search items)))
 
 
-(register-handler :page/set
+(register-handler
+  :page/set
+  middleware
   (fn [db [_id items]]
     (assoc db :page items)))
 
 
-(register-handler :init
+(register-handler
+  :init
+  middleware
   (fn [db [_]]
     (assoc db :items/list-items []
               :input/search ""

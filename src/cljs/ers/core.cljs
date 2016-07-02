@@ -37,6 +37,6 @@
 
 (defn ^:export main []
   (dev-setup)
-  (routes/app-routes)
   (dispatch [:init])
+  (routes/app-routes)
   (reload))
