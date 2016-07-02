@@ -2,6 +2,10 @@
   (:require [schema.core :as s :include-macros true]))
 
 
+(def Profile
+  {s/Keyword [s/Any]})
+
+
 (def KeyValuePair
   {:key   s/Str
    :value s/Str})
