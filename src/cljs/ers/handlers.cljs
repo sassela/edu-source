@@ -51,7 +51,7 @@
   middleware
   (fn [db [_]]
     (GET
-      (str jorum-route "/rest/items")
+      (str jorum-route "/rest/items?expand=metadata")
       (assoc (standard-request :items/get-all)
         :handler (fn [response]
                    (dispatch [:items/update (:item response)]))))
@@ -63,7 +63,7 @@
   middleware
   (fn [db [_id keywords]]
     (GET
-      (str jorum-route "/rest/items/search?q=" keywords)
+      (str jorum-route "/rest/items/search?q=" keywords "&expand=metadata")
       (assoc (standard-request :items/search)
         :handler (fn [response]
                    (dispatch [:items/update (:item response)]))))
