@@ -24,9 +24,18 @@
   (-> s (clojure.string/replace #"dc." "") (clojure.string/replace "." "/") (keyword)))
 
 
+(def features [:subject/jacs3
+               :subject/jacs3code
+               :audience
+               :jmd/community
+               :contributor/author
+               :language/iso])
+
 (s/defn profile :- schema/Profile
   [metadata :- [schema/KeyValuePair]]
   (->>
     metadata
+    ;; FIXME
     (map #(hash-map (clean-keyword (:key %)) (:value %)))
+    (filter #(some (fn [feature] (= (ffirst %) feature)) features))
     (into #{})))
