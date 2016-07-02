@@ -1,6 +1,7 @@
 (ns ers.handlers
   (:require [ajax.core :refer [GET]]
             [ers.schema :refer [db-schema]]
+            [ers.util :refer [profile]]
             [re-frame.core :refer [after dispatch register-handler]]
             [schema.core :as s :include-macros true]))
 
@@ -37,6 +38,14 @@
   (fn [db [_]]
     (prn "DB: " db)
     db))
+
+
+(register-handler
+  :user/update-profile
+  middleware
+  (fn [db [_id item]]
+    (let [item-profile (profile (:metadata item))]
+      (update-in db [:user :profile] #(into (if (set? %) % (set %)) item-profile)))))
 
 
 (register-handler

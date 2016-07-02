@@ -22,9 +22,8 @@
   [:div
    [:h3 name]
    [:button
-    {:on-click (util/event-handler
-                 (fn [e] (prn "YAY! " link)))}
-    "DOWNLOAD"]])
+    {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
+    "ADD"]])
 
 
 (defn item-list
@@ -40,8 +39,8 @@
   (let []
     [:div [:h1 "Home Page"]
      [:p "FIXME"]
-     [:button {:on-click #(dispatch [:print-db])} "DB"]
-     [:button {:on-click #(dispatch [:items/get-all])} "ALL ITEMS"]
+     [:button {:on-click (util/event-handler (fn [e] (dispatch [:print-db])))} "DB"]
+     [:button {:on-click (util/event-handler (fn [e] (dispatch [:items/get-all])))} "ALL ITEMS"]
      [search]
      [item-list]
      [:a {:href "#/about"} "about page"]
