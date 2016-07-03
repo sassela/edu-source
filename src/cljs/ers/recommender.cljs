@@ -1,5 +1,6 @@
 (ns ers.recommender
-  (:require [clojure.set :as set]))
+  (:require [clojure.set :as set]
+            [ers.util :refer [profile]]))
 
 
 (defn jaccard-index
@@ -11,3 +12,8 @@
   [a b]
   (/ (count (set/intersection a b))
     (count (set/union a b))))
+
+(defn similarity-scores
+  [user-profile items]
+  (map (fn [item] (assoc item :score (jaccard-index user-profile (profile (:metadata item))))) items))
+

@@ -1,7 +1,18 @@
 (ns ers.pages.home
   (:require [ers.subscriptions]
             [ers.util :as util]
-            [re-frame.core :refer [dispatch subscribe]]))
+            [re-frame.core :refer [dispatch subscribe]]
+            [reagent.ratom :refer-macros [reaction]]))
+
+
+(defn recommend-button
+  []
+  (let [items        (subscribe [:items/list-items])
+        user-profile (subscribe [:user/profile])]
+    (fn []
+      [:button {:on-click (util/event-handler
+                            (fn [e] (dispatch [:items/update-scores @user-profile @items])))}
+       "SCOREMEBABY"])))
 
 
 (defn search []
@@ -40,8 +51,8 @@
     [:div [:h1 "Home Page"]
      [:p "FIXME"]
      [:button {:on-click (util/event-handler (fn [e] (dispatch [:print-db])))} "DB"]
-     [:button {:on-click (util/event-handler (fn [e] (dispatch [:items/get-all])))} "ALL ITEMS"]
      [search]
+     [recommend-button]
      [item-list]
      [:a {:href "#/about"} "about page"]
      ]))
