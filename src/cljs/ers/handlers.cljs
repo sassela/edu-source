@@ -45,8 +45,7 @@
   :items/update-scores
   middleware
   (fn [db [_id user-profile items]]
-    (assoc db :items/list-items (similarity-scores user-profile items))
-    db))
+    (assoc db :items/list-items (similarity-scores user-profile items))))
 
 
 (register-handler
@@ -72,7 +71,8 @@
       (str jorum-route "/rest/items?expand=metadata")
       (assoc (standard-request :items/get-all)
         :handler (fn [response]
-                   (dispatch [:items/update (:item response)]))))
+                   (let [items (util/transform-metadata (:item response))]
+                     (dispatch [:items/update items])))))
     db))
 
 
@@ -84,7 +84,8 @@
       (str jorum-route "/rest/items/search?q=" keywords "&expand=metadata")
       (assoc (standard-request :items/search)
         :handler (fn [response]
-                   (dispatch [:items/update (:item response)]))))
+                   (let [items (util/transform-metadata (:item response))]
+                     (dispatch [:items/update items])))))
     db))
 
 

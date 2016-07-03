@@ -24,6 +24,19 @@
   (-> s (clojure.string/replace #"dc." "") (clojure.string/replace "." "/") (keyword)))
 
 
+(s/defn transform-metadata-one
+  [item :- schema/ListItem]
+  (->>
+    (:metadata item)
+    (map #(hash-map (clean-keyword (:key %)) (:value %)))
+    (apply merge-with (comp flatten list))))
+
+
+(s/defn transform-metadata
+  [items :- [schema/ListItem]]
+  (map #(assoc % :clean-metadata (transform-metadata-one %)) items))
+
+
 (def features [:subject/jacs3
                :subject/jacs3code
                :audience

@@ -2,6 +2,9 @@
   (:require [schema.core :as s :include-macros true]))
 
 
+(def transformed-metadata
+  {s/Keyword (s/conditional coll? [s/Str] :else s/Str)})
+
 (def Profile
   {s/Keyword [s/Any]})
 
@@ -16,6 +19,7 @@
    :id                                    s/Num
    :type                                  s/Str
    :metadata                              [KeyValuePair]
+   :clean-metadata                        transformed-metadata
    :expand                                [s/Str]
    :link                                  s/Str
    :lastModified                          s/Str
