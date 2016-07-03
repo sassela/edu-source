@@ -11,7 +11,8 @@
         user-profile (subscribe [:user/profile])]
     (fn []
       [:button {:on-click (util/event-handler
-                            (fn [e] (dispatch [:items/update-scores @user-profile @items])))}
+                            (fn [e]
+                              (dispatch [:items/update-scores @user-profile @items])))}
        "SCOREMEBABY"])))
 
 
@@ -28,13 +29,25 @@
          "SEARCH"]]])))
 
 
+(defn item-info
+  [title k]
+  (when k
+    [:div title (if (coll? k) (clojure.string/join ", " k) k)]))
+
+
 (defn item-component
-  [{:keys [name link] :as item}]
-  [:div
-   [:h3 name]
-   [:button
-    {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
-    "ADD"]])
+  [{:keys [name score clean-metadata] :as item}]
+  (let [{:keys [description relation subject publisher]} clean-metadata]
+    [:div
+     [:h3 name]
+     [item-info "Profile similarity: " (cljs.pprint/cl-format nil "~,2f" score)]
+     [item-info "Publisher: " publisher]
+     [:div (str (util/truncate description 500) "...")]
+     [item-info "Subject: " subject]
+     [item-info "Content type: " relation]
+     [:button
+      {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
+      "ADD"]]))
 
 
 (defn item-list
@@ -43,7 +56,7 @@
     (fn []
       [:div
        [:h2 (str (count @items) " results:")]
-       (into [:div] (map item-component @items))])))
+       (into [:div] (map item-component (sort-by :score > @items)))])))
 
 
 (defn page []

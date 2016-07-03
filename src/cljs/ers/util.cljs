@@ -2,14 +2,6 @@
   (:require [ers.schema :as schema]
             [schema.core :as s :include-macros true]))
 
-(defn compose-query
-  [params]
-  (->>
-    params
-    (map (fn [[k v]] (str (name k) "=" "\"" v "\"")))
-    (interpose "&")
-    (apply str)))
-
 
 (defn event-handler
   [f]
@@ -17,6 +9,11 @@
     (apply f [e])
     (.stopPropagation e)
     (.preventDefault e)))
+
+
+(defn truncate
+  [s n]
+  (clojure.string/join (take n s)))
 
 
 (s/defn clean-keyword :- s/Keyword
