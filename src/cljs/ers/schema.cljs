@@ -21,6 +21,7 @@
    :lastModified                          s/Str
    :withdrawn                             s/Str
    :handle                                s/Str
+   (s/optional-key :score)                s/Num
    (s/optional-key :archived)             s/Str
    (s/optional-key :bitstreams)           s/Any
    (s/optional-key :parentCollection)     s/Any

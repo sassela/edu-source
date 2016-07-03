@@ -1,5 +1,6 @@
 (ns ers.handlers
   (:require [ajax.core :refer [GET]]
+            [ers.recommender :refer [similarity-scores]]
             [ers.schema :refer [db-schema]]
             [ers.util :refer [profile]]
             [re-frame.core :refer [after dispatch register-handler]]
@@ -36,7 +37,15 @@
 (register-handler
   :print-db
   (fn [db [_]]
-    (prn "DB: " db)
+    (cljs.pprint/pprint db)
+    db))
+
+
+(register-handler
+  :items/update-scores
+  middleware
+  (fn [db [_id user-profile items]]
+    (assoc db :items/list-items (similarity-scores user-profile items))
     db))
 
 
