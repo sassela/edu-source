@@ -3,6 +3,7 @@
             [ers.pages.about :as about]
             [ers.pages.home :as home]
             [ers.pages.item :as item]
+            [ers.pages.user-profile :as profile]
             [ers.routes :as routes]
             [ers.subscriptions]
             [re-frame.core :refer [dispatch subscribe]]
@@ -23,7 +24,7 @@
 (defmulti page identity)
 (defmethod page :home [] home/page)
 (defmethod page :about [] about/page)
-(defmethod page :item [] item/page)
+(defmethod page :profile [] profile/page)
 (defmethod page :default [] (fn [_] [:div]))
 
 

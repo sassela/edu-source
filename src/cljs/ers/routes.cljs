@@ -20,12 +20,13 @@
   (defroute "/" []
     (dispatch [:page/set :home]))
 
-  (defroute "/about" []
-    (dispatch [:page/set :about]))
+  (defroute "/profile" []
+    (dispatch [:page/set :profile]))
 
-  (defroute "/item/:id" [id]
-    (dispatch [:page/set-id id])
-    (dispatch [:items/get-one id])
-    (dispatch [:page/set :item]))
+  ; ext link to JORUM for now
+  #_(defroute "/item/:id" [id]
+      (dispatch [:page/set-id id])
+      (dispatch [:items/get-one id])
+      (dispatch [:page/set :item]))
 
   (hook-browser-navigation!))

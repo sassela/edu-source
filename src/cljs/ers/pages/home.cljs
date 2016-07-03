@@ -3,6 +3,10 @@
             [re-frame.core :refer [dispatch subscribe]]))
 
 
+(defn profile-button
+  []
+  [:a {:href "#/profile"} [:button "PROFILE"]])
+
 (defn recommend-button
   []
   (let [items        (subscribe [:items/list-items])
@@ -65,7 +69,6 @@
      [:p "FIXME"]
      [:button {:on-click (util/event-handler (fn [e] (dispatch [:print-db])))} "DB"]
      [search]
+     [profile-button]
      [recommend-button]
-     [item-list]
-     [:a {:href "#/about"} "about page"]
-     ]))
+     [item-list]]))

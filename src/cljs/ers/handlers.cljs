@@ -62,6 +62,13 @@
 
 
 (register-handler
+  :user/remove-from-profile
+  middleware
+  (fn [db [_id item]]
+    (update-in db [:user :profile] #(disj % item))))
+
+
+(register-handler
   :user/update-profile
   middleware
   (fn [db [_id item]]
