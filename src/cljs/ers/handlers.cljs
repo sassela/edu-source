@@ -42,6 +42,19 @@
 
 
 (register-handler
+  :items/get-one
+  middleware
+  (fn [db [_id item-id]]
+    (GET
+      (str jorum-route "/rest/items/" item-id "?expand=bitstreams,metadata")
+      (assoc (standard-request :items/get-one)
+        :handler (fn [response]
+                   (let [item (util/transform-metadata-one response)]
+                     (dispatch [:items/update-one item])))))
+    db))
+
+
+(register-handler
   :items/update-scores
   middleware
   (fn [db [_id user-profile items]]
@@ -54,6 +67,13 @@
   (fn [db [_id item]]
     (let [item-profile (profile (:metadata item))]
       (update-in db [:user :profile] #(into (if (set? %) % (set %)) item-profile)))))
+
+
+(register-handler
+  :items/update-one
+  middleware
+  (fn [db [_id item]]
+    (assoc db :items/detail item)))
 
 
 (register-handler

@@ -25,6 +25,7 @@
 
   (defroute "/item/:id" [id]
     (dispatch [:page/set-id id])
+    (dispatch [:items/get-one id])
     (dispatch [:page/set :item]))
 
   (hook-browser-navigation!))

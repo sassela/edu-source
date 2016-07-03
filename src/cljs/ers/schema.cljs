@@ -2,7 +2,7 @@
   (:require [schema.core :as s :include-macros true]))
 
 
-(def transformed-metadata
+(def TransformedMetadata
   {s/Keyword (s/conditional coll? [s/Str] :else s/Str)})
 
 (def Profile
@@ -19,7 +19,7 @@
    :id                                    s/Num
    :type                                  s/Str
    :metadata                              [KeyValuePair]
-   :clean-metadata                        transformed-metadata
+   :clean-metadata                        TransformedMetadata
    :expand                                [s/Str]
    :link                                  s/Str
    :lastModified                          s/Str
@@ -34,8 +34,9 @@
 
 
 (def db-schema
-  {:items/list-items         [ListItem]
-   :input/search             s/Str
-   :page                     s/Keyword
-   (s/optional-key :page/id) s/Str
-   (s/optional-key :user)    s/Any})
+  {:items/list-items              [ListItem]
+   :input/search                  s/Str
+   :page                          s/Keyword
+   (s/optional-key :page/id)      s/Str
+   (s/optional-key :items/detail) ListItem
+   (s/optional-key :user)         s/Any})
