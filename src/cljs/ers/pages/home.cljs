@@ -3,32 +3,35 @@
             [re-frame.core :refer [dispatch subscribe]]))
 
 
-(defn profile-button
-  []
-  [:a {:href "#/profile"} [:button "PROFILE"]])
-
 (defn recommend-button
   []
   (let [items        (subscribe [:items/list-items])
         user-profile (subscribe [:user/profile])]
     (fn []
-      [:button {:on-click (util/event-handler
+      [:div
+       [:button.btn.btn-primary {:on-click (util/event-handler
                             (fn [e]
                               (dispatch [:items/update-scores @user-profile @items])))}
-       "SCOREMEBABY"])))
+       "SORT BY RECOMMENDED"]])))
 
 
 (defn search []
   (when-let [input (subscribe [:input/search])]
     (fn []
-      [:form
-       [:formgroup
-        [:input {:on-change #(dispatch [:input/update-search (-> % .-target .-value)])
-                 :value     @input
-                 :placeholder "search"}]
-        [:button {:on-click (util/event-handler
-                              (fn [e] (dispatch [:items/search @input])))}
-         "SEARCH"]]])))
+      [:div.row
+       [:div.col-lg-6
+        [:div.input-group
+         [:input.form-control
+          {:on-change   #(dispatch [:input/update-search (-> % .-target .-value)])
+           :type        "text"
+           :value       @input
+           :placeholder "search"}]
+         [:span.input-group-btn
+          [:button.btn.btn-primary
+           {:type     "submit"
+            :on-click (util/event-handler
+                        (fn [e] (dispatch [:items/search @input])))}
+           "SEARCH"]]]]])))
 
 
 (defn item-info
@@ -40,18 +43,20 @@
 (defn item-component
   [{:keys [name score clean-metadata id] :as item}]
   (let [{:keys [description relation subject publisher jmd/community]} clean-metadata]
-    [:div
-     [:h3 name]
-     [item-info "Profile similarity: " (cljs.pprint/cl-format nil "~,2f" score)]
-     [item-info "Publisher: " publisher]
-     [:div (str (util/truncate description 500) "...")]
-     [item-info "Subject: " subject]
-     [item-info "Level: " community]
-     [item-info "Content type: " relation]
-     [:button
-      {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
-      "ADD"]
-     [:a {:href (str "http://find.jorum.ac.uk/resources/" id) :target "_blank"} [:button "VISIT JORUM RESOURCE PAGE"]]]))
+    [:div.panel.panel-default
+     [:div.panel-heading [:h3 name]]
+     [:div.panel-body
+      [:h4 [item-info "Profile similarity: " (cljs.pprint/cl-format nil "~,2f" score)]]
+      [item-info "Publisher: " publisher]
+      [:div (str (util/truncate description 500) "...")]
+      [item-info "Subject: " subject]
+      [item-info "Level: " community]
+      [item-info "Content type: " relation]
+      [:a {:href (str "http://find.jorum.ac.uk/resources/" id) :target "_blank"} "Resource page"]
+      [:div
+       [:button.btn.btn-success.pull-right
+        {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
+        "ADD"]]]]))
 
 
 (defn item-list
@@ -59,16 +64,25 @@
   (let [items (subscribe [:items/list-items])]
     (fn []
       [:div
-       [:h2 (str (count @items) " results:")]
+       [:div (str (count @items) " results:")]
        (into [:div] (map item-component (sort-by :score > @items)))])))
 
 
 (defn page []
   (let []
-    [:div [:h1 "Home Page"]
-     [:p "FIXME"]
-     [:button {:on-click (util/event-handler (fn [e] (dispatch [:print-db])))} "DB"]
-     [search]
-     [profile-button]
-     [recommend-button]
-     [item-list]]))
+    [:div
+     [:nav
+      [:ul.nav.nav-pills.pull-right
+       [:li.active [:a {:href "#"} "HOME"]]
+       [:li [:a {:href "#/profile"} "PROFILE"]]]]
+     [:div.jumbotron
+      {:style {:background-image "url(images/0SP70JWWOK.jpg)"}}
+      [:div.container
+       [:h1 {:style {:color "white"}}
+        "eduSource"]
+       [:p.lead {:style {:color "white"}}
+        "Educational content recommendations for higher and further education"]
+       [search]]]
+     [:div.container
+      [recommend-button]
+      [item-list]]]))
