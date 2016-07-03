@@ -37,6 +37,7 @@
 
 (def features [:subject/jacs3
                :subject/jacs3code
+               :subject
                :audience
                :jmd/community
                :contributor/author
