@@ -2,7 +2,7 @@
   (:require [ajax.core :refer [GET]]
             [ers.recommender :refer [similarity-scores]]
             [ers.schema :refer [db-schema]]
-            [ers.util :refer [profile]]
+            [ers.util :as util :refer [profile]]
             [re-frame.core :refer [after dispatch register-handler]]
             [schema.core :as s :include-macros true]))
 
