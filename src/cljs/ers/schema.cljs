@@ -34,7 +34,8 @@
 
 
 (def db-schema
-  {:items/list-items [ListItem]
-   :input/search s/Str
-   :page s/Keyword
-   (s/optional-key :user) s/Any})
+  {:items/list-items         [ListItem]
+   :input/search             s/Str
+   :page                     s/Keyword
+   (s/optional-key :page/id) s/Str
+   (s/optional-key :user)    s/Any})

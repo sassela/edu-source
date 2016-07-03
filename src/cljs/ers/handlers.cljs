@@ -97,10 +97,17 @@
 
 
 (register-handler
+  :page/set-id
+  middleware
+  (fn [db [_id page-id]]
+    (assoc db :page/id page-id)))
+
+
+(register-handler
   :page/set
   middleware
-  (fn [db [_id items]]
-    (assoc db :page items)))
+  (fn [db [_id page]]
+    (assoc db :page page)))
 
 
 (register-handler

@@ -1,8 +1,6 @@
 (ns ers.pages.home
-  (:require [ers.subscriptions]
-            [ers.util :as util]
-            [re-frame.core :refer [dispatch subscribe]]
-            [reagent.ratom :refer-macros [reaction]]))
+  (:require [ers.util :as util]
+            [re-frame.core :refer [dispatch subscribe]]))
 
 
 (defn recommend-button
@@ -36,7 +34,7 @@
 
 
 (defn item-component
-  [{:keys [name score clean-metadata] :as item}]
+  [{:keys [name score clean-metadata id] :as item}]
   (let [{:keys [description relation subject publisher]} clean-metadata]
     [:div
      [:h3 name]
@@ -47,7 +45,8 @@
      [item-info "Content type: " relation]
      [:button
       {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
-      "ADD"]]))
+      "ADD"]
+     [:a {:href (str "#/item/" id)} [:button "VIEW MORE"]]]))
 
 
 (defn item-list

@@ -23,4 +23,8 @@
   (defroute "/about" []
     (dispatch [:page/set :about]))
 
+  (defroute "/item/:id" [id]
+    (dispatch [:page/set-id id])
+    (dispatch [:page/set :item]))
+
   (hook-browser-navigation!))

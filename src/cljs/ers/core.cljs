@@ -1,7 +1,8 @@
 (ns ers.core
   (:require [ers.handlers]
-            [ers.pages.home :as home]
             [ers.pages.about :as about]
+            [ers.pages.home :as home]
+            [ers.pages.item :as item]
             [ers.routes :as routes]
             [ers.subscriptions]
             [re-frame.core :refer [dispatch subscribe]]
@@ -22,6 +23,7 @@
 (defmulti page identity)
 (defmethod page :home [] home/page)
 (defmethod page :about [] about/page)
+(defmethod page :item [] item/page)
 (defmethod page :default [] (fn [_] [:div]))
 
 
