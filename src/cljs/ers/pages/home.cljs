@@ -35,18 +35,19 @@
 
 (defn item-component
   [{:keys [name score clean-metadata id] :as item}]
-  (let [{:keys [description relation subject publisher]} clean-metadata]
+  (let [{:keys [description relation subject publisher jmd/community]} clean-metadata]
     [:div
      [:h3 name]
      [item-info "Profile similarity: " (cljs.pprint/cl-format nil "~,2f" score)]
      [item-info "Publisher: " publisher]
      [:div (str (util/truncate description 500) "...")]
      [item-info "Subject: " subject]
+     [item-info "Level: " community]
      [item-info "Content type: " relation]
      [:button
       {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
       "ADD"]
-     [:a {:href (str "#/item/" id)} [:button "VIEW MORE"]]]))
+     [:a {:href (str "http://find.jorum.ac.uk/resources/" id) :target "_blank"} [:button "VISIT JORUM RESOURCE PAGE"]]]))
 
 
 (defn item-list
