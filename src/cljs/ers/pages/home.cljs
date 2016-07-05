@@ -34,7 +34,9 @@
           [:button.btn.btn-primary
            {:type     "submit"
             :on-click (util/event-handler
-                        (fn [e] (dispatch [:items/search @input])))}
+                        (fn [e]
+                          (dispatch [:page/change-panel :search])
+                          (dispatch [:items/search @input])))}
            "SEARCH"]]]]])))
 
 
@@ -107,20 +109,26 @@
 
 
 (defn page []
-  (let []
-    [:div
-     [:nav
-      [:ul.nav.nav-pills.pull-right
-       [:li.active [:a {:href "#"} "HOME"]]
-       [:li [:a {:href "#/profile"} "PROFILE"]]]]
-     [:div.jumbotron
-      {:style {:background-image "url(images/0SP70JWWOK.jpg)"}}
-      [:div.container
-       [:h1 {:style {:color "white"}}
-        "eduSource"]
-       [:p.lead {:style {:color "white"}}
-        "Educational content recommendations for higher and further education"]
-       [search]]]
-     [:div.container
-      [recommend-button]
-      [item-list]]]))
+  (let [current-panel (subscribe [:panel])]
+    (fn []
+      [:div
+       [:nav
+        [:ul.nav.nav-pills.pull-right
+         [:li.active [:a {:href "#"} "HOME"]]
+         [:li [:a {:href "#/profile"
+                   :style {:color "white"}} "PROFILE"]]]]
+       [:div.jumbotron
+        {:style {:background-image "url(images/0SP70JWWOK.jpg)"}}
+        [:div.container
+         [:h1 {:style {:color "white"}}
+          "eduSource"]
+         [:p.lead {:style {:color "white"}}
+          "Educational content recommendations for higher and further education"]
+         [search]]]
+       [:div.container
+        (case @current-panel
+          :recommendations [recommended-item-list]
+          [:div
+           [:h3 "Search Results:"]
+           [recommend-button]
+           [item-list]])]])))

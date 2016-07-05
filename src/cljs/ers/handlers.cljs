@@ -40,6 +40,14 @@
     (cljs.pprint/pprint db)
     db))
 
+(register-handler
+  :page/change-panel
+  middleware
+  (fn [db [_id panel]]
+    ;(print "USER PROFILE: ")
+    ;(cljs.pprint/pprint (disj (get-in db [:user :profile]) item))
+    (assoc-in db [:panel] panel)))
+
 
 (register-handler
   :items/get-one
