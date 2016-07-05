@@ -1,6 +1,6 @@
-# ers
+# eduSorce
 
-A [reagent](https://github.com/reagent-project/reagent) application designed to ... well, that part is up to you.
+A [reagent](https://github.com/reagent-project/reagent) application designed to recommend educational content to further- and higher-education teachers.
 
 ## Development Mode
 
