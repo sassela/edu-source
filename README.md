@@ -1,4 +1,4 @@
-# eduSorce
+# edu-source
 
 A [reagent](https://github.com/reagent-project/reagent) application designed to recommend educational content to further- and higher-education teachers.
 
