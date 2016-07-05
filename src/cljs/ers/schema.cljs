@@ -3,15 +3,15 @@
 
 
 (def TransformedMetadata
-  {s/Keyword (s/conditional coll? [s/Str] :else s/Str)})
+  {s/Keyword (s/maybe (s/conditional coll? [s/Str] :else s/Str))})
 
 (def Profile
   {s/Keyword [s/Any]})
 
 
 (def KeyValuePair
-  {:key   s/Str
-   :value s/Str})
+  {:key   (s/maybe s/Str)
+   :value (s/maybe s/Str)})
 
 
 (def ListItem
@@ -34,9 +34,11 @@
 
 
 (def db-schema
-  {:items/list-items              [ListItem]
-   :input/search                  s/Str
-   :page                          s/Keyword
-   (s/optional-key :page/id)      s/Str
-   (s/optional-key :items/detail) ListItem
-   (s/optional-key :user)         s/Any})
+  {:items/list-items                         [ListItem]
+   :input/search                             s/Str
+   :page                                     s/Keyword
+   (s/optional-key :items/recommended-items) (s/maybe s/Any)
+   (s/optional-key :panel)                   s/Keyword
+   (s/optional-key :page/id)                 s/Str
+   (s/optional-key :items/detail)            ListItem
+   (s/optional-key :user)                    s/Any})
