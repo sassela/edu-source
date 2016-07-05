@@ -5,14 +5,17 @@
 
 (defn recommend-button
   []
-  (let [items        (subscribe [:items/list-items])
-        user-profile (subscribe [:user/profile])]
+  (let [items                     (subscribe [:items/list-items])
+        user-profile              (subscribe [:user/profile])
+        recommendation-available? (reaction (seq @user-profile))]
     (fn []
-      [:div
-       [:button.btn.btn-primary {:on-click (util/event-handler
-                            (fn [e]
-                              (dispatch [:items/update-scores @user-profile @items])))}
-       "SORT BY RECOMMENDED"]])))
+        [:div
+         [:button.btn.btn-primary {:on-click (util/event-handler
+                                               (fn [e]
+                                                 (dispatch [:page/change-panel :recommendations])
+                                                 (dispatch [:items/update-scores @user-profile @items])))}
+          "VIEW RECOMMENDATIONS"]]
+      )))
 
 
 (defn search []
@@ -46,7 +49,6 @@
     [:div.panel.panel-default
      [:div.panel-heading [:h3 name]]
      [:div.panel-body
-      [:h4 [item-info "Profile similarity: " (cljs.pprint/cl-format nil "~,2f" score)]]
       [item-info "Publisher: " publisher]
       [:div (str (util/truncate description 500) "...")]
       [item-info "Subject: " subject]
@@ -55,8 +57,28 @@
       [:a {:href (str "http://find.jorum.ac.uk/resources/" id) :target "_blank"} "Resource page"]
       [:div
        [:button.btn.btn-success.pull-right
-        {:on-click (util/event-handler (fn [e] (dispatch [:user/update-profile item])))}
-        "ADD"]]]]))
+        {:on-click (util/event-handler (fn [e]
+                                         (dispatch [:user/update-selected-items item])
+                                         (dispatch [:user/update-profile item])))}
+        "ADD TO PROFILE"]]]]))
+
+(defn recommended-item-component
+  [{:keys [name score clean-metadata id] :as item}]
+  (let [{:keys [description]} clean-metadata]
+    [:div.panel.panel-default
+     [:div.panel-heading [:h3 name]]
+     [:div.panel-body
+      [:h4 [item-info "Profile similarity: " (cljs.pprint/cl-format nil "~,2f" score)]]
+      ;[explanation item]
+      [:div (str (util/truncate description 500) "...")]
+
+      [:a {:href (str "http://find.jorum.ac.uk/resources/" id) :target "_blank"} "Resource page"]
+      [:div
+       [:button.btn.btn-success.pull-right
+        {:on-click (util/event-handler (fn [e]
+                                         (dispatch [:user/update-selected-items item])
+                                         (dispatch [:user/update-profile item])))}
+        "ADD TO PROFILE"]]]]))
 
 
 (defn item-list
@@ -65,7 +87,22 @@
     (fn []
       [:div
        [:div (str (count @items) " results:")]
-       (into [:div] (map item-component (sort-by :score > @items)))])))
+       (into [:div] (map item-component @items))])))
+
+
+(defn recommended-item-list
+  []
+  (let [items               (subscribe [:items/recommended-items])
+        user-selected-items (subscribe [:user/selected-items]) ;; TODO remove from list
+        items-by-score      (reaction (sort-by :score > @items))]
+    (fn []
+      [:div
+       [:h3 "Recommended items"]
+       (prn "items: " (count @items))
+       [:div (str (count @items) " results:")]
+       (if (empty? @items)
+         [:div "You don't have any recommendations yet. Try adding some items to your profile"]
+         (into [:div] (map recommended-item-component @items-by-score)))])))
 
 
 (defn page []

@@ -58,7 +58,7 @@
   :items/update-scores
   middleware
   (fn [db [_id user-profile items]]
-    (assoc db :items/list-items (similarity-scores user-profile items))))
+    (assoc db :items/recommended-items (similarity-scores user-profile items))))
 
 
 (register-handler
