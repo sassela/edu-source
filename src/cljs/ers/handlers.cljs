@@ -69,6 +69,13 @@
 
 
 (register-handler
+  :user/update-selected-items
+  middleware
+  (fn [db [_id item]]
+    (update-in db [:user :selected-item-ids] #(conj % (:id item)))))
+
+
+(register-handler
   :user/update-profile
   middleware
   (fn [db [_id item]]
@@ -141,6 +148,8 @@
   :init
   middleware
   (fn [db [_]]
+    (dispatch [:items/get-all])
     (assoc db :items/list-items []
               :input/search ""
+              :user {:selected-item-ids #{}}
               :page :home)))

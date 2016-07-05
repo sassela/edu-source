@@ -1,4 +1,5 @@
 (ns ers.pages.home
+  (:require-macros [reagent.ratom :refer [reaction]])
   (:require [ers.util :as util]
             [re-frame.core :refer [dispatch subscribe]]))
 
