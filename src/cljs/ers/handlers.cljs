@@ -63,6 +63,16 @@
 
 
 (register-handler
+  :items/remove-from-recommendations
+  middleware
+  (fn [db [_id]]
+    (let [all-items              (:items/recommended-items db)
+          user-selected-item-ids (get-in db [:user :selected-item-ids])
+          items-to-remove        (mapv #(util/get-item-by-id all-items %) user-selected-item-ids)]
+      (update db :items/recommended-items #(apply disj % items-to-remove)))))
+
+
+(register-handler
   :items/update-scores
   middleware
   (fn [db [_id user-profile items]]

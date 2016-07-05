@@ -15,5 +15,5 @@
 
 (defn similarity-scores
   [user-profile items]
-  (map (fn [item] (assoc item :score (jaccard-index user-profile (profile (:metadata item))))) items))
+  (into #{} (map (fn [item] (assoc item :score (jaccard-index user-profile (profile (:metadata item))))) items)))
 

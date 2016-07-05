@@ -13,8 +13,9 @@
         [:div
          [:button.btn.btn-primary {:on-click (util/event-handler
                                                (fn [e]
-                                                 (dispatch [:page/change-panel :recommendations])
-                                                 (dispatch [:items/update-scores @user-profile @items])))}
+                                                 (dispatch [:items/update-scores @user-profile @items])
+                                                 (dispatch [:items/remove-from-recommendations])
+                                                 (dispatch [:page/change-panel :recommendations])))}
           "VIEW RECOMMENDATIONS"]]
       )))
 
@@ -47,7 +48,7 @@
 
 
 (defn item-component
-  [{:keys [name score clean-metadata id] :as item}]
+  [{:keys [name clean-metadata id] :as item}]
   (let [{:keys [description relation subject publisher jmd/community]} clean-metadata]
     [:div.panel.panel-default
      [:div.panel-heading [:h3 name]]
@@ -101,7 +102,6 @@
     (fn []
       [:div
        [:h3 "Recommended items"]
-       (prn "items: " (count @items))
        [:div (str (count @items) " results:")]
        (if (empty? @items)
          [:div "You don't have any recommendations yet. Try adding some items to your profile"]
