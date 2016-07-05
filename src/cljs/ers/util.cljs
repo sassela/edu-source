@@ -16,6 +16,12 @@
   (clojure.string/join (take n s)))
 
 
+(s/defn get-item-by-id :- schema/ListItem
+  [items :- [schema/ListItem]
+   id :- s/Str]
+  (some #(when (= (:id %) id) %) items))
+
+
 (s/defn clean-keyword :- s/Keyword
   [s :- s/Str]
   (-> s (clojure.string/replace #"dc." "") (clojure.string/replace "." "/") (keyword)))
