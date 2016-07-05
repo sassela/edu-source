@@ -10,14 +10,14 @@
         user-profile              (subscribe [:user/profile])
         recommendation-available? (reaction (seq @user-profile))]
     (fn []
-        [:div
-         [:button.btn.btn-primary {:on-click (util/event-handler
-                                               (fn [e]
-                                                 (dispatch [:items/update-scores @user-profile @items])
-                                                 (dispatch [:items/remove-from-recommendations])
-                                                 (dispatch [:page/change-panel :recommendations])))}
-          "VIEW RECOMMENDATIONS"]]
-      )))
+      [:div
+       (when @recommendation-available?
+         [:button.btn.btn-primary.pull-right {:on-click (util/event-handler
+                                                        (fn [e]
+                                                          (dispatch [:items/update-scores @user-profile @items])
+                                                          (dispatch [:items/remove-from-recommendations])
+                                                          (dispatch [:page/change-panel :recommendations])))}
+        "VIEW RECOMMENDATIONS"])])))
 
 
 (defn search []
@@ -97,15 +97,16 @@
 (defn recommended-item-list
   []
   (let [items               (subscribe [:items/recommended-items])
-        user-selected-items (subscribe [:user/selected-items]) ;; TODO remove from list
         items-by-score      (reaction (sort-by :score > @items))]
     (fn []
       [:div
+       [:button.btn.pull-right {:on-click (util/event-handler
+                                             (fn [e]
+                                               (dispatch [:page/change-panel :item-list])))}
+        "BACK TO ITEM LIST"]
        [:h3 "Recommended items"]
        [:div (str (count @items) " results:")]
-       (if (empty? @items)
-         [:div "You don't have any recommendations yet. Try adding some items to your profile"]
-         (into [:div] (map recommended-item-component @items-by-score)))])))
+       (into [:div] (map recommended-item-component @items-by-score))])))
 
 
 (defn page []
@@ -129,6 +130,6 @@
         (case @current-panel
           :recommendations [recommended-item-list]
           [:div
-           [:h3 "Search Results:"]
            [recommend-button]
+           [:h3 "Search Results:"]
            [item-list]])]])))
